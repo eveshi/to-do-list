@@ -1,11 +1,21 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const mongoose = require('mongoose');
 
-const item = require('./routes/item');
-const user = require('./routes/user');
+const items = require('./routes/items');
+const users = require('./routes/users');
+
+const errorHandling = require('./error-handling');
 
 const port = process.env.port || 5000;
+
+mongoose.connect(
+  'mongodb+srv://eveshi:woaiCHINA52c!@cluster0-tdf3l.mongodb.net/to-do-list',
+  (err, next) => {
+    next(err);
+  },
+);
 
 const app = express();
 app.listen(port);
@@ -21,32 +31,7 @@ app.get('/', (req, res, next) => {
 
 app.use(bodyParser);
 
-app.use('/item', item);
-app.use('/user', user);
+app.use('/items', items);
+app.use('/users', users);
 
-app.use((err, req, res, next) => {
-  if (err.message === 'bad_request') {
-    res.send({
-      code: 400,
-      type: err.message,
-      message: 'Bad Request',
-    });
-    return;
-  }
-
-  if (err.message === 'fail_in_db') {
-    res.send({
-      code: 400,
-      type: err.message,
-      message: 'Server Errors',
-    });
-    return;
-  }
-
-  res.send({
-    code: 500,
-    type: 'other_server_error',
-    message: 'Server Errors',
-  });
-  next();
-});
+app.use(errorHandling);
