@@ -11,7 +11,7 @@ const errorHandling = require('./error-handling');
 const port = process.env.port || 5000;
 
 mongoose.connect(
-  'mongodb+srv://eveshi:woaiCHINA52c!@cluster0-tdf3l.mongodb.net/to-do-list',
+  process.env.MONGO_URL,
   (err, next) => {
     next(err);
   },

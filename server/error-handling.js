@@ -1,20 +1,17 @@
 const ERROR_HANDLING = (err, req, res, next) => {
-  if (err.message === 'bad_request') {
-    res.send({
-      code: 400,
-      type: err.message,
-      message: 'Bad Request',
-    });
-    return;
-  }
+  res.status(400).json({
+    code: 400,
+    type: 'bad_requst',
+    message: 'Bad Request',
+  });
 
-  res.status(404).send({
+  res.status(404).json({
     code: 404,
     type: 'not_found',
     message: 'Page Not Found',
   });
 
-  res.send({
+  res.json({
     code: 500,
     type: 'server_error',
     message: 'Server Errors',

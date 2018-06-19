@@ -1,35 +1,62 @@
+const createError = require('http-errors');
 const express = require('express');
 
 const Item = require('../models/item');
 
 const router = express.Router();
 
-// post new item to DB
+// Create new item with user
 router.post('/', async (req, res, next) => {
   try {
     if (!req.body.item) {
-      next(new Error('bad_request'));
+      next(createError(400, 'bad_request'));
     }
 
-    Item.create(req.body.item, (err) => {
+    await Item.create(req.body.item, (err) => {
       next(err);
     });
 
-    res.send('post item successfully');
+    res.json({
+      message: 'post item successfully',
+    });
     return;
   } catch (error) {
     next(error);
   }
 });
 
-// update old item in DB
-router.patch('/', async (req, res, next) => {
+// Read items
+router.get('/', async (req, res, next) => {
   try {
-    if (!req.body.items || !req.body.email) {
-      next(new Error('bad_request'));
+    if (!req.body.email) {
+      next(createError(400, 'bad_request'));
     }
 
-    Item.updateOne(
+    await Item.findOne(
+      { email: req.body.email },
+      (err) => {
+        next(err);
+      },
+    );
+
+    res.json({
+      message: 'get items successfully',
+    });
+    return;
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Update old item
+router.patch('/', async (req, res, next) => {
+  try {
+    if (!req.body.email ||
+        !req.body.items) {
+      next(createError(400, 'bad_request'));
+    }
+
+    await Item.updateOne(
       { email: req.body.item.email },
       { items: req.body.items },
       (err) => {
@@ -37,7 +64,32 @@ router.patch('/', async (req, res, next) => {
       },
     );
 
-    res.send('delete item successfully');
+    res.json({
+      message: 'delete item successfully',
+    });
+    return;
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Delete items with user
+router.delete('/', async (req, res, next) => {
+  try {
+    if (!req.body.email) {
+      next(createError(400, 'bad_request'));
+    }
+
+    await Item.deleteOne(
+      { email: req.body.email },
+      (err) => {
+        next(err);
+      },
+    );
+
+    res.json({
+      message: 'post item successfully',
+    });
     return;
   } catch (error) {
     next(error);
