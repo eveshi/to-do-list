@@ -1,4 +1,4 @@
-export default function (err, req, res, next) {
+const ERROR_HANDLING = (err, req, res, next) => {
   if (err.message === 'bad_request') {
     res.send({
       code: 400,
@@ -20,4 +20,7 @@ export default function (err, req, res, next) {
     message: 'Server Errors',
   });
   next();
-}
+};
+
+module.exports = ERROR_HANDLING;
+
