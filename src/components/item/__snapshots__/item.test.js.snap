@@ -1,9 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
+exports[`snapshot renders correctly 1`] = `
 <div>
   <p>
     there is music
   </p>
+  <button
+    onClick={[Function]}
+  >
+    change
+  </button>
 </div>
 `;
